@@ -8,7 +8,7 @@
 
 var gameOptions = {
 	renderer: Kiwi.RENDERER_CANVAS,
-	width: 1080,
+	width: 860,
 	height: 600
 };
 
@@ -25,8 +25,10 @@ myState.preload = function(){
     this.addImage('background','assets/background.png');
     this.addSpriteSheet('boite_1','assets/boite_1.png',100,100);
     this.addSpriteSheet('manteaux','assets/manteaux.png',100,500);
+    this.addSpriteSheet('porte','assets/porte.png',165,506);
     this.addAudio( 'boom' , 'assets/boom.mp3');
     this.addAudio( 'chute' , 'assets/chute.mp3');
+    this.addAudio( 'grincement' , 'assets/grincement.mp3');
 }
 
 myState.create = function(){
@@ -34,13 +36,17 @@ myState.create = function(){
     this.background = new Kiwi.GameObjects.StaticImage(this, this.textures['background'], 10, 10);
     this.boite_1 = new Kiwi.GameObjects.Sprite(this,this.textures.boite_1,483,44);
     this.manteaux = new Kiwi.GameObjects.Sprite(this,this.textures.manteaux,325,225);
+    this.porte = new Kiwi.GameObjects.Sprite(this,this.textures.porte,606,113);
     this.addChild(this.background);
     this.addChild(this.boite_1);
     this.addChild(this.manteaux);
+    this.addChild(this.porte);
     this.boom = new Kiwi.Sound.Audio(this.game, 'boom', 1, false);
     this.chute = new Kiwi.Sound.Audio(this.game, 'chute', 1, false);
+    this.grince = new Kiwi.Sound.Audio(this.game, 'grincement', 1, false);
     this.boite_1.input.onRelease.addOnce(this.drop, this);
     this.manteaux.input.onRelease.addOnce(this.clothes, this);
+    this.porte.input.onRelease.addOnce(this.door, this);
 }
 
 myState.update = function(){
@@ -84,4 +90,10 @@ myState.clothes = function () {
     vitesse = 0;
 }
 
+myState.door = function () {
+   vitesse = 0;
+   this.porte.transform.scaleX=-0.8;
+   this.porte.transform.x+=120;
+   this.grince.play();
+}
 game.states.addState(myState, true);
